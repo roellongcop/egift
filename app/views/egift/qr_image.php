@@ -1,0 +1,1 @@
+<img src="<?= Yii::$app->template->_image($qr_image) ?>"class="img-thumbnail" >

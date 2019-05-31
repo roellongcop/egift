@@ -1,0 +1,1 @@
+<img class="img-profile" src="<?= Yii::$app->template->_image($logo) ?>">

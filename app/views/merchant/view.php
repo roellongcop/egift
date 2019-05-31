@@ -1,0 +1,70 @@
+<?php
+
+use yii\helpers\Html;
+use yii\widgets\DetailView;
+
+/* @var $this yii\web\View */
+/* @var $model app\models\Profile */
+
+$this->title = $model->_name;
+$this->params['breadcrumbs'][] = ['label' => 'Merchants', 'url' => ['index']];
+$this->params['breadcrumbs'][] = $this->title;
+?>
+<div class="profile-view">
+ 
+   <h2>
+        <img src=" <?= Yii::$app->template->_image($model->logo) ?>" class="img-profile">
+        <?= Html::encode($this->title) ?>
+    </h2>
+    <hr>
+
+
+    <p>
+        <?php if(Yii::$app->permission->canUpdate()) : ?>
+            <?= Html::a('Update Basic Information', ['update', 'id' => $model->id], [
+                'class' => 'btn btn-primary btn-sm'
+            ]) ?>
+        <?php endif; ?>
+    </p>
+
+    
+    <div class="table-responsive">
+        
+        <?= DetailView::widget([
+            'model' => $model,
+            'attributes' => [
+                '_name',
+                '_description:raw',
+                'allowed_egifts',
+                'user._nature_of_business:raw',
+                'tel_no',
+                '_address',
+                '_updated', 
+                '_registrationLink:raw', 
+            ],
+        ]) ?>
+    </div>
+
+    <hr>
+    <h2>Credentials</h2>
+    <hr>
+
+
+    <div class="table-responsive">
+        <?= DetailView::widget([
+            'model' => $model,
+            'attributes' => [
+                'user.username',
+                'user.email:email',
+                'user.password',
+                'user.access_token',
+                'user.auth_key',
+                ['label' => 'User Type', 'value' => $model->user->_user_type],
+                'user._status:raw',
+                'user._created',
+                'user._updated',
+            ],
+        ]) ?>
+
+    </div>
+</div>

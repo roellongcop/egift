@@ -1,0 +1,21 @@
+<?php
+
+use yii\helpers\Html;
+
+
+/* @var $this yii\web\View */
+/* @var $model app\models\PointManagement */
+
+$this->title = 'Create Point Management';
+$this->params['breadcrumbs'][] = ['label' => 'Point Managements', 'url' => ['index']];
+$this->params['breadcrumbs'][] = $this->title;
+?>
+<div class="point-management-create">
+
+    <h2><?= Html::encode($this->title) ?></h2> <hr>   
+
+    <?= $this->render('_form', [
+        'model' => $model,
+    ]) ?>
+
+</div>
