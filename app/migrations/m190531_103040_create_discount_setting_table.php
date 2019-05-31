@@ -16,8 +16,8 @@ class m190531_103040_create_discount_setting_table extends Migration
             $this->createTable('{{%discount_setting1}}', [
                 'id' => $this->primaryKey(),
                 'merchant_id' => $this->integer(11)->notNull(),
-                'benchmark_amount' => $this->float(10, 2)->notNull(),
-                'percentage_amount' => $this->float(10, 2)->notNull(),
+                'benchmark_amount' => $this->float()->notNull(),
+                'percentage_amount' => $this->float()->notNull(),
                 'status' => $this->integer(1)->notNull(),
                 'updated_at' => $this->timestamp()->notNull(),
                 'created_at' => $this->timestamp()->defaultExpression('CURRENT_TIMESTAMP'),
