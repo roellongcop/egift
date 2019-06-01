@@ -12,17 +12,15 @@ class m190531_103040_create_discount_setting_table extends Migration
      */
     public function safeUp()
     {
-        if (Yii::$app->db->getTableSchema('{{%discount_setting1}}', true) === null) {
-            $this->createTable('{{%discount_setting1}}', [
+            $this->createTable('{{%discount_setting}}', [
                 'id' => $this->primaryKey(),
                 'merchant_id' => $this->integer(11)->notNull(),
-                'benchmark_amount' => $this->float()->notNull(),
-                'percentage_amount' => $this->float()->notNull(),
+                'benchmark_amount' => $this->float(2)->notNull(),
+                'percentage_amount' => $this->float(2)->notNull(),
                 'status' => $this->integer(1)->notNull(),
                 'updated_at' => $this->timestamp()->notNull(),
                 'created_at' => $this->timestamp()->defaultExpression('CURRENT_TIMESTAMP'),
             ]);
-        }
     }
 
     /**
@@ -30,6 +28,6 @@ class m190531_103040_create_discount_setting_table extends Migration
      */
     public function safeDown()
     {
-        $this->dropTable('{{%discount_setting1}}');
+            $this->dropTable('{{%discount_setting}}');
     }
 }
