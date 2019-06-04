@@ -26,16 +26,9 @@ $asset = SiteAsset::register($this);
 <body class="is-preload">
 <?php $this->beginBody() ?>
 
-	<!-- Header -->
-	<?= $this->render('_site_header') ?>
-    
-	<!-- Nav -->
-	<?= $this->render('_site_nav') ?>
 
 	<?= $content ?>
 
-
-	<?= $this->render('_site_footer') ?>
 
 <?php $this->endBody() ?>
 </body>

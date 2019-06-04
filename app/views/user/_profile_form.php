@@ -28,19 +28,39 @@ use yii\widgets\ActiveForm;
                 <?= $form->field($user, 'email', Yii::$app->template->_form('envelope'))->textInput(['maxlength' => true]) ?>
 
 
-                <?= $form->field($model, 'logo_input', Yii::$app->template->_form('folder'))->fileInput(['class' => 'image-input']) ?>
+                <div class="row">
+                    <div class="col-md-6">
+                        <?= $form->field($model, 'logo_input')->fileInput(['class' => 'image-input']) ?>
 
+                        
+                        <h1><i class="fa fa-spinner"></i></h1>
+
+
+                        <img 
+                            id="image-preview" 
+                            src="<?= Yii::$app->template->_image($model->logo) ?>" 
+                            alt="" 
+                            class="img-thumbnail" 
+                            width="200"
+                             height="200">
+                    </div>
+                    <div class="col-md-6">
+                        <?= $form->field($model, 'logo_banner_input')->fileInput(['class' => 'image-input']) ?>
+
+                        
+                        <h1><i class="fa fa-spinner"></i></h1>
+
+
+                        <img 
+                            id="image-preview-banner" 
+                            src="<?= Yii::$app->template->_image($model->logo_banner) ?>" 
+                            alt="" 
+                            class="img-thumbnail" 
+                            width="200"
+                            height="200">
+                    </div>
+                </div>
                 
-                <h1><i class="fa fa-spinner"></i></h1>
-
-
-                <img 
-                    id="image-preview" 
-                    src="<?= Yii::$app->template->_image($model->logo) ?>" 
-                    alt="" 
-                    class="img-thumbnail" 
-                    width="200"
-                     height="200">
                 
             </div>
         </div>

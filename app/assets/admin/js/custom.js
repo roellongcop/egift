@@ -503,7 +503,7 @@ $(document).ready(function() {
     var showLoader = function() {
         $('.fa-spinner').addClass('fa-spin');
         $('.fa-spinner').show();
-        $('#image-preview').hide();
+        // $('#image-preview').hide();
     }
 
     $('#profile-logo_input').on("change", function() {
@@ -511,6 +511,16 @@ $(document).ready(function() {
         previewImage('profile-logo_input');
     });
 
+
+    $('#egift-image_banner_input').on("change", function() {
+        showLoader();
+        previewImage('egift-image_banner_input', '#image-preview-banner');
+    });
+
+    $('#profile-logo_banner_input').on("change", function() {
+        showLoader();
+        previewImage('profile-logo_banner_input', '#image-preview-banner');
+    });
 
 
     $('#egift-image_input').on("change", function() {
@@ -539,13 +549,20 @@ $(document).ready(function() {
 
 
 
-    function previewImage(id) {
+    function previewImage(id, holder="") {
         var oFReader = new FileReader();
         oFReader.readAsDataURL(document.getElementById(id).files[0]);
 
         oFReader.onload = function(oFREvent) {
-            $('#image-preview').attr('src', oFREvent.target.result);
-            $('#image-preview').show();
+            if (holder === "") {
+                $('#image-preview').attr('src', oFREvent.target.result);
+                $('#image-preview').show();
+            }
+            else {
+                $(holder).attr('src', oFREvent.target.result);
+                $(holder).show();
+            }
+
             $('.fa-spinner').removeClass('fa-spin');
             $('.fa-spinner').hide();
         };

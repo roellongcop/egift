@@ -12,7 +12,7 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="user-view">
 
     <h2>
-        <img src=" <?= Yii::$app->template->_image() ?>" class="img-profile">
+        <img src="<?= Yii::$app->template->_image() ?>" class="img-profile">
         <?= Html::encode($this->title) ?>
     </h2>
     <hr>
@@ -26,17 +26,25 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php endif; ?>
 
     
+    <div class="row">
+        <div class="col-md-8">
+            <?= DetailView::widget([
+                'model' => $model,
+                'attributes' => [
+                    '_name',
+                    '_description',
+                    'tel_no',
+                    '_address',
+                    '_updated',
+                ],
+            ]) ?>
+        </div>
+        <div class="col-md-4">
+            <img src="<?= Yii::$app->template->_image($model->logo_banner) ?>" class="img-thumbnail">
+        </div>
+    </div>
 
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
-            '_name',
-            '_description',
-            'tel_no',
-            '_address',
-            '_updated',
-        ],
-    ]) ?>
+    
 
     <br>
     <h2>Credentials</h2>

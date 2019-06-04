@@ -35,26 +35,42 @@ use app\models\RoleSearch;
                 
                 <?= $form->field($model, 'authorized')->checkbox() ?>
 
-
-                <?= $form->field($model, 'logo_input', Yii::$app->template->_form('folder'))->fileInput(['class' => 'image-input']) ?>
-
-                <h1><i class="fa fa-spinner"></i></h1>
-
-                <img 
-                    id="image-preview" 
-                    src="<?= Yii::$app->template->_image($model->logo) ?>" 
-                    alt="" 
-                    class="img-thumbnail" 
-                    width="200" 
-                    height="200">
-                
-
-            </div>
-            <div class="col-md-7">
-
                 <?= $form->field($model, 'description', Yii::$app->template->_form('location-pin'))->textarea(['rows' => 6]) ?>
 
                 <?= $form->field($model, 'address', Yii::$app->template->_form('location-pin'))->textarea(['rows' => 6]) ?>
+
+                
+                
+
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                    <div class="col-md-6">
+                        <?= $form->field($model, 'logo_input')->fileInput(['class' => 'image-input']) ?>
+                        <h1><i class="fa fa-spinner"></i></h1>
+                        <img 
+                            id="image-preview" 
+                            src="<?= Yii::$app->template->_image($model->logo) ?>" 
+                            alt="" 
+                            class="img-thumbnail" 
+                            width="200" 
+                            height="200">
+                    </div>
+                    <div class="col-md-6">
+                        <?= $form->field($model, 'logo_banner_input')->fileInput(['class' => 'image-input']) ?>
+
+                        <h1><i class="fa fa-spinner"></i></h1>
+
+                        <img 
+                            id="image-preview-banner" 
+                            src="<?= Yii::$app->template->_image($model->logo_banner) ?>" 
+                            alt="" 
+                            class="img-thumbnail" 
+                            width="200" 
+                            height="200">
+                    </div>
+                </div>
+                
             </div>
         </div>
  

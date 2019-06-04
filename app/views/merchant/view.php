@@ -28,21 +28,25 @@ $this->params['breadcrumbs'][] = $this->title;
     </p>
 
     
-    <div class="table-responsive">
-        
-        <?= DetailView::widget([
-            'model' => $model,
-            'attributes' => [
-                '_name',
-                '_description:raw',
-                'allowed_egifts',
-                'user._nature_of_business:raw',
-                'tel_no',
-                '_address',
-                '_updated', 
-                '_registrationLink:raw', 
-            ],
-        ]) ?>
+    <div class="row">
+        <div class="col-md-8">
+            <?= DetailView::widget([
+                'model' => $model,
+                'attributes' => [
+                    '_name',
+                    '_description:raw',
+                    'allowed_egifts',
+                    'user._nature_of_business:raw',
+                    'tel_no',
+                    '_address',
+                    '_updated', 
+                    '_registrationLink:raw', 
+                ],
+            ]) ?>
+        </div>
+        <div class="col-md-4">
+            <img src="<?= Yii::$app->template->_image($model->logo_banner) ?>" class="img-thumbnail">
+        </div>
     </div>
 
     <hr>

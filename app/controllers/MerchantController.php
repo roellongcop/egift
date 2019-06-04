@@ -65,6 +65,7 @@ class MerchantController extends Controller
     public function actionCreate()
     {
         $model = new Profile();
+        $model->scenario = 'create';
         $user = new User();
 
         $user->password = Yii::$app->security->generateRandomString(10);
@@ -87,6 +88,7 @@ class MerchantController extends Controller
             $uploadPath = Yii::$app->template->createFolder(['uploads', 'merchant']); 
 
             $model->logo_input = UploadedFile::getInstance($model, 'logo_input');
+            $model->logo_banner_input = UploadedFile::getInstance($model, 'logo_banner_input');
             $model->user_id = $user->id;
             $model->upload($uploadPath);
 
@@ -141,14 +143,15 @@ class MerchantController extends Controller
 
             $uploadPath = Yii::$app->template->createFolder(['uploads', 'merchant']); 
             $model->logo_input = UploadedFile::getInstance($model, 'logo_input');
+            $model->logo_banner_input = UploadedFile::getInstance($model, 'logo_banner_input');
             $model->upload($uploadPath);
-            $model->save();
 
-            $user = User::findOne($model->user_id);
-            $user->save();
-
-
-            return $this->redirect(['view', 'id' => $model->id]);
+            if ($model->save()) {
+                $user = User::findOne($model->user_id);
+                if ($user->save()) {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
+            }
         }
 
 

@@ -42,8 +42,31 @@
 
     </p>
 
+     <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    Egift Banner Image
+                </div>
+                <div class="card-body">
+                    <img src="<?= Yii::$app->template->_image($model->image_banner) ?>"class="img-thumbnail" >
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    Egift Image
+                </div>
+                <div class="card-body">
+                    <img src="<?= Yii::$app->template->_image($model->image) ?>"class="img-thumbnail" >
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
                     Egift Information
@@ -63,12 +86,6 @@
                     ]) ?>
                 </div>
             </div>
-
-
-        </div>
-
-        <div class="col-md-4">
-            <img src="<?= Yii::$app->template->_image($model->image) ?>"class="img-thumbnail" >
         </div>
 
     </div>

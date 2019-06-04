@@ -21,6 +21,7 @@ use Yii;
  */
 class Egift extends \yii\db\ActiveRecord
 {
+    public $image_banner_input;
     public $image_input;
     public $branches;
     /**
@@ -37,9 +38,10 @@ class Egift extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['promo', 'stock', 'merchant_id', 'description','name'], 'required'],
+            [['promo', 'stock', 'merchant_id', 'description','name', ], 'required'],
+            [['image_input', 'image_banner_input',], 'required', 'on' => 'create'],
             [['merchant_id', 'category_id'], 'integer'],
-            [['description', 'image', 'qr_image'], 'string'],
+            [['description', 'image', 'qr_image', 'image_banner'], 'string'],
             [['created_at', 'updated_at', 'branches', 'start_at', 'end_at'], 'safe'],
             [['referral_code', 'qr_code'], 'string', 'max' => 128],
             [['status', 'promo'], 'integer', 'max' => 9],
@@ -47,6 +49,7 @@ class Egift extends \yii\db\ActiveRecord
             [['sale_price'], 'validateSale'],
 
             [['image_input'], 'file', 'skipOnEmpty' => true, 'extensions' => 'jpg, jpeg, png'],
+            [['image_banner_input'], 'file', 'skipOnEmpty' => true, 'extensions' => 'jpg, jpeg, png'],
 
         ];
     }
@@ -71,6 +74,7 @@ class Egift extends \yii\db\ActiveRecord
             'image' => 'Featured Image',
             'qr_image' => 'QR',
             'qr_code' => 'QR Code',
+            'image_banner_input' => 'Upload Egift Banner Image',
             'image_input' => 'Upload Featured Image',
             'status' => 'Status',
             'created_at' => 'Created At',
@@ -192,16 +196,27 @@ class Egift extends \yii\db\ActiveRecord
 
     public function upload($uploadPath)
     {
-        if ($this->validate() && $this->image_input) { 
+        if ($this->validate()) { 
+            if ($this->image_input) {
+                $image_path = $uploadPath.
+                    $this->image_input->baseName . '.' . 
+                    $this->image_input->extension;
+
+                $this->image_input->saveAs($image_path, false);
+
+                $this->image = $image_path;
+            }
             
 
-            $path = $uploadPath.
-                $this->image_input->baseName . '.' . 
-                $this->image_input->extension;
+            if ($this->image_banner_input) {
+                $image_banner_path = $uploadPath.
+                    $this->image_banner_input->baseName . '.' . 
+                    $this->image_banner_input->extension;
 
-            $this->image_input->saveAs($path, false);
+                $this->image_banner_input->saveAs($image_banner_path, false);
 
-            $this->image = $path;
+                $this->image_banner = $image_banner_path;
+                }
 
             return true;
         }

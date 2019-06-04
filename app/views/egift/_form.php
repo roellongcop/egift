@@ -61,15 +61,12 @@ $model->end_at = date('Y-m-d', strtotime($model->end_at));
                 </table> 
  
             </div>
-            <div class="col-md-6"  >
+            <div class="col-md-6">
 
                 <div class="row">
                     <div class="col-md-6">
                         <?= $form->field($model, 'stock')->textInput() ?>
                     </div> 
-
-                   
-                   
                 </div>
 
                 <div class="col-md-12">
@@ -77,31 +74,39 @@ $model->end_at = date('Y-m-d', strtotime($model->end_at));
                 </div> 
 
 
+                <div  id="div-range">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <?= $form->field($model, 'start_at')->textInput([
+                                'type' => 'date'
+                            ]) ?>
+                        </div> 
 
-                <div class="row" id="div-range">
-                    <div class="col-md-6">
-                        <?= $form->field($model, 'start_at')->textInput([
-                            'type' => 'date'
-                        ]) ?>
-                    </div> 
-
-                   
-                    <div class="col-md-6">
-                        <?= $form->field($model, 'end_at')->textInput([
-                            'type' => 'date'
-                        ]) ?>
-                    </div> 
+                       
+                        <div class="col-md-6">
+                            <?= $form->field($model, 'end_at')->textInput([
+                                'type' => 'date'
+                            ]) ?>
+                        </div> 
+                    </div>
                 </div>
 
+                <div class="row">
+                    <div class="col-md-6">
+                        <?= $form->field($model, 'image_banner_input')->fileInput(['class' => 'image-input']) ?>
 
+                        <img id="image-preview-banner" src="<?= Yii::$app->template->_image($model->image_banner) ?>" alt="" class="img-thumbnail" width="200" height="200">
+                    </div>
 
-                <?= $form->field($model, 'image_input', Yii::$app->template->_form('folder'))->fileInput(['class' => 'image-input']) ?>
+                    <div class="col-md-6">
+                        <?= $form->field($model, 'image_input')->fileInput(['class' => 'image-input']) ?>
 
                 
-                <h1><i class="fa fa-spinner"></i></h1>
+                        <h1><i class="fa fa-spinner"></i></h1>
 
-                <img id="image-preview" src="<?= Yii::$app->template->_image($model->image) ?>" 
-                    alt="" class="img-thumbnail" width="200" height="200">
+                        <img id="image-preview" src="<?= Yii::$app->template->_image($model->image) ?>" alt="" class="img-thumbnail" width="200" height="200">
+                    </div>
+                </div>
             </div>
         </div>
 
