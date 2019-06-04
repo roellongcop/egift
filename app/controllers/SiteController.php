@@ -175,10 +175,7 @@ class SiteController extends Controller
 
     public function actionAuthorization($auth_key)
     {
-
-
         $user = User::findOne(['auth_key' => $auth_key]);
-
 
         $model = Profile::findOne(['user_id' => $user->id]);
         $model->scenario = 'create';
