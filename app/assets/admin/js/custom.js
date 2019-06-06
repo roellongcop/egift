@@ -49,8 +49,7 @@ $(document).ready(function() {
     $(document).on('click', '.btn-add-sub-menu', function() {
         var self = this;
         var main_key = $(self).closest('.main-menu-panel').data('key');
-
-        console.log(main_key);
+ 
         
         $.ajax({
             url: base_url + 'role/get-sub-menu',
@@ -170,7 +169,7 @@ $(document).ready(function() {
             dataType: 'json',
             method: 'get',
             data: {type: 'merchants'},
-            success: (res => {
+            success: (res => { 
 
                 var total = [];
                 var month = [];

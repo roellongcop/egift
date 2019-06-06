@@ -26,7 +26,7 @@ class DashboardController extends \yii\web\Controller
     {
     	return User::findAll([
     		'status' => 1,
-    		'user_type' => 1
+    		'user_type' => 8
     	]);
     }
 

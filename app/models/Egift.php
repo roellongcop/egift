@@ -89,6 +89,11 @@ class Egift extends \yii\db\ActiveRecord
         return $this->hasOne(User::className(), ['id' => 'merchant_id']);
     }
 
+    public function getProfile()
+    {
+        return $this->hasOne(Profile::className(), ['user_id' => 'id'])->via('merchant');
+    }
+
     public function getCategory()
     {
         return $this->hasOne(Category::className(), ['id' => 'category_id']);

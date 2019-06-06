@@ -202,10 +202,8 @@ class EgiftController extends Controller
     {
         $model = $this->findModel($id);
 
-        $model->merchant_id = Yii::$app->user->identity->user_type === 0? $model->merchant_id:Yii::$app->user->identity->id;
+        $model->merchant_id = (Yii::$app->user->identity->user_type === 9) ? $model->merchant_id:Yii::$app->user->identity->id;
 
-       
-        
         if ($model->load(Yii::$app->request->post())) {
             $model->branches = isset(Yii::$app->request->post()['Egift']['branches'])? json_encode($model->branches): '';
 
@@ -220,7 +218,6 @@ class EgiftController extends Controller
                     return $this->redirect(['view', 'id' => $model->id]);
                 }
             }
-             
         }
 
 
