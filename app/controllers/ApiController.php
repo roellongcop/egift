@@ -2,10 +2,10 @@
 
 namespace app\controllers;
 
-// header('Access-Control-Allow-Origin: *');  
+header('Access-Control-Allow-Origin: *');  
    
-//  header('Access-Control-Allow-Methods: GET,PUT,POST,DELETE,PATCH,OPTIONS');
-//  header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization');
+ header('Access-Control-Allow-Methods: GET,PUT,POST,DELETE,PATCH,OPTIONS');
+ header('Access-Control-Allow-Headers: * , X-Requested-With, Content-Type, Accept, Authorization');
      
 use Yii;
 use app\models\LoginForm;
@@ -17,22 +17,18 @@ use app\models\Egift;
 use app\models\NatureOfBusiness;
 use app\models\EgiftBranches;
 use app\models\Rating;
-
+use app\models\Branches;
 class ApiController extends \yii\web\Controller
-{	
+{   
 
-	public $layout = 'plain';
+    public $layout = 'plain';
 
 
     public function actions()
     {
-        // \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
     }
 
-    protected function _return($data)
-    {
-        print_r($data); die;
-    }
 
 
 
@@ -50,34 +46,34 @@ class ApiController extends \yii\web\Controller
 
         if(Yii::$app->request->post())
         {
-        	$data = [];
-        	$data['LoginForm'] = Yii::$app->request->post();
+            $data = [];
+            $data['LoginForm'] = Yii::$app->request->post();
 
-	        if ($model->load($data) && $model->login() ) 
+            if ($model->load($data) && $model->login() ) 
             {
-	            return [ $model->_user->attributes ];
-	        }
-	        else
+                return [ $model->_user->attributes ];
+            }
+            else
             {
-	        	return false;
-	        }
-    	}
+                return false;
+            }
+        }
 
-    	return false;
+        return false;
     }
 
 
 
     public function actionCheckEmail()
     {
-    	$model = User::findOne(['email' => Yii::$app->request->post('email')]);
+        $model = User::findOne(['email' => Yii::$app->request->post('email')]);
 
-    	if($model)
+        if($model)
         {
-    		return true;
-    	}
+            return true;
+        }
 
-    	return false;
+        return false;
     }
 
 
@@ -89,11 +85,11 @@ class ApiController extends \yii\web\Controller
 
         if(Yii::$app->request->post())
         {
-        	$data = [];
+            $data = [];
 
-        	$data['User'] = Yii::$app->request->post();
+            $data['User'] = Yii::$app->request->post();
 
-	        if ($model->load($data)) 
+            if ($model->load($data)) 
             {     
                 $model->username = $model->email;
                 $model->role_id = 0;
@@ -108,10 +104,10 @@ class ApiController extends \yii\web\Controller
                 }
 
                 return [$model->errors];
-	        }
-    	}
+            }
+        }
 
-        return false;	
+        return false;   
     }
 
 
@@ -149,6 +145,7 @@ class ApiController extends \yii\web\Controller
         {
             $records = Egift::find()
             ->where(['status' => 1])
+            ->with('profile')
             ->asArray()
             ->all();
 
@@ -190,8 +187,6 @@ class ApiController extends \yii\web\Controller
             }
         }
 
-        print_r($egifts);
-        die;
         return $egifts;
     }   
 
@@ -250,11 +245,13 @@ class ApiController extends \yii\web\Controller
 
             foreach ($records as &$rec) 
             {
-                $rec['ratings'] = $this->actionRatingByMerchant($rec['id']);
+                $rec['ratings']  = $this->actionRatingByMerchant($rec['id']);
+                $rec['egifts']   = $this->actionEgiftsByMerchant($rec['id']);
+                $rec['branches'] = $this->actionBranches($rec['id']);
             }
 
-
-            print_r($records); die;
+           // print_r($records); exit();
+            return $records;
         }
 
         $records = Profile::find()
@@ -267,11 +264,13 @@ class ApiController extends \yii\web\Controller
             ->one();
 
 
-        $records['ratings'] = $this->actionRatingByMerchant($rec['id']);
-
+            $records['ratings']  = $this->actionRatingByMerchant($records['id']);
+            $records['egifts']   = $this->actionEgiftsByMerchant($records['id']);
+            $records['branches'] = $this->actionBranches($records['id']);
          
-
-        return $this->_return($records);
+        
+       // print_r($records); exit();
+        return $records;
     }
 
 
@@ -284,9 +283,30 @@ class ApiController extends \yii\web\Controller
 
         return $ratings;
     }
+    
+    
+    
 
-
-
+    
+    public function actionBranches($id="")
+    {
+       if($id === "")
+       {
+            $records = Branches::find()
+            ->asArray()
+            ->all();
+        
+            return $records;
+       } 
+      
+      
+             $records = Branches::find()
+            ->where(['merchant_id' => $id])
+            ->asArray()
+            ->all();
+        
+            return $records;
+    }
 
 
 
