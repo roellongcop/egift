@@ -68,4 +68,16 @@ class EgiftUsageSearch extends EgiftUsage
 
         return $dataProvider;
     }
+
+
+    public static function usage($year='')
+    {
+        $records = EgiftUsage::find()
+            ->where(['status' => 1])
+            ->andFilterWhere(['YEAR(created_at)' => $year])
+            ->asArray()
+            ->all();
+
+        return $records;
+    }
 }

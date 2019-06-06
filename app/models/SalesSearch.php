@@ -72,4 +72,17 @@ class SalesSearch extends Sales
 
         return $dataProvider;
     }
+
+
+    public static function saleTransaction($year="")
+    {
+        $records = Sales::find()
+            ->select(['SUM(amount) as total'])
+            ->where(['status' => 1])
+            ->andFilterWhere(['YEAR(created_at)' => $year])
+            ->asArray()
+            ->one()['total'];
+
+        return $records;
+    }
 }

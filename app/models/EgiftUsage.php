@@ -30,7 +30,7 @@ class EgiftUsage extends \yii\db\ActiveRecord
         return [
             [['egift_id', 'status'], 'required'],
             [['egift_id'], 'integer'],
-            [['date_used'], 'safe'],
+            [['created_at'], 'safe'],
             [['status'], 'string', 'max' => 1],
         ];
     }
@@ -43,7 +43,7 @@ class EgiftUsage extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'egift_id' => 'Egift ID',
-            'date_used' => 'Date Used',
+            'created_at' => 'Date Used',
             'status' => 'Status',
         ];
     }
