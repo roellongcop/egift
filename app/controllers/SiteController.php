@@ -256,4 +256,13 @@ class SiteController extends Controller
         ]);
 
     }
+
+    public function actionTest($value='')
+    {
+        $mail = Yii::$app->mailer->compose()
+            ->setFrom(['carmonahmo@gmail.com' => 'Egift Rewards'])
+            ->setTo('longcoproel@gmail.com')
+            ->setSubject('Merchant | Registration') 
+            ->send();
+    }
 }
