@@ -33,14 +33,13 @@ $config = [
         ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
-            'useFileTransport' => false,
             'transport' => [
                 'class' => 'Swift_SmtpTransport',
-                'host' => 'smtp.gmail.com',  
-                'username' => 'carmonahmo@gmail.com',
-                'password' => 'carmonahmo123456',
-                'port' => '587', 
-                'encryption' => 'tls', 
+                'host' => 'egift2goapp.com',  // e.g. smtp.mandrillapp.com or smtp.gmail.com
+                'username' => 'roel@egift2goapp.com',
+                'password' => 'longcop11',
+                'port' => '587', // Port 25 is a very common port too
+                'encryption' => 'tls', // It is often used, check your provider or mail server specs
             ],
         ],
 
