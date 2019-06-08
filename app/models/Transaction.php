@@ -5,24 +5,23 @@ namespace app\models;
 use Yii;
 
 /**
- * This is the model class for table "{{%sales}}".
+ * This is the model class for table "{{%transaction}}".
  *
  * @property int $id
+ * @property string $transaction_no
+ * @property int $user_id
  * @property int $status
  * @property string $created_at
  * @property string $updated_at
- * @property int $merchant_id
- * @property string $transaction_id
- * @property double $amount
  */
-class Sales extends \yii\db\ActiveRecord
+class Transaction extends \yii\db\ActiveRecord
 {
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
-        return '{{%sales}}';
+        return '{{%transaction}}';
     }
 
     /**
@@ -31,11 +30,11 @@ class Sales extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['status', 'merchant_id', 'transaction_id', 'amount'], 'required'],
+            [['transaction_no', 'user_id'], 'required'],
+            [['status'], 'default', 'value' => 1],
+            [['user_id', 'status'], 'integer'],
             [['created_at', 'updated_at'], 'safe'],
-            [['merchant_id', 'transaction_id', 'status'], 'integer'],
-            [['amount'], 'number'],
-            [['status'], 'default', 'value' => 1], 
+            [['transaction_no'], 'string', 'max' => 128],
         ];
     }
 
@@ -46,12 +45,11 @@ class Sales extends \yii\db\ActiveRecord
     {
         return [
             'id' => 'ID',
+            'transaction_no' => 'Transaction No',
+            'user_id' => 'User ID',
             'status' => 'Status',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
-            'merchant_id' => 'Egift ID',
-            'transaction_id' => 'Transaction ID',
-            'amount' => 'Amount',
         ];
     }
 }

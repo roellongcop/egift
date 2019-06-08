@@ -72,6 +72,10 @@ $config = [
                 // for testing only in email
                 'send-email/<auth_key>' => 'site/send-email',
 
+                '<controller>/update-stock/<egift_id:\d+>/<quantity:\d+>' => '<controller>/update-stock',
+
+                '<controller>/egift-user/<from:\d+>' => '<controller>/egift-user',
+                '<controller>/egift-user/<from:\d+>/<to:\d+>' => '<controller>/egift-user',
                 '<controller>/add-to-blocklist/<user_id:\d+>' => '<controller>/add-to-blocklist',
                 '<controller>/set-to-authorized/<user_id:\d+>' => '<controller>/set-to-authorized',
                 '<controller>/set-to-unauthorized/<user_id:\d+>' => '<controller>/set-to-unauthorized',

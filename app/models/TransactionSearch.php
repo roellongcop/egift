@@ -5,12 +5,12 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Sales;
+use app\models\Transaction;
 
 /**
- * SalesSearch represents the model behind the search form of `app\models\Sales`.
+ * TransactionSearch represents the model behind the search form of `app\models\Transaction`.
  */
-class SalesSearch extends Sales
+class TransactionSearch extends Transaction
 {
     /**
      * @inheritdoc
@@ -18,9 +18,8 @@ class SalesSearch extends Sales
     public function rules()
     {
         return [
-            [['id', 'merchant_id', 'transaction_id'], 'integer'],
-            [['status', 'created_at', 'updated_at'], 'safe'],
-            [['amount'], 'number'],
+            [['id', 'user_id', 'status'], 'integer'],
+            [['transaction_no', 'created_at', 'updated_at'], 'safe'],
         ];
     }
 
@@ -42,7 +41,7 @@ class SalesSearch extends Sales
      */
     public function search($params)
     {
-        $query = Sales::find();
+        $query = Transaction::find();
 
         // add conditions that should always apply here
 
@@ -61,28 +60,14 @@ class SalesSearch extends Sales
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
+            'user_id' => $this->user_id,
+            'status' => $this->status,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'merchant_id' => $this->merchant_id,
-            'amount' => $this->amount,
         ]);
 
-        $query->andFilterWhere(['like', 'status', $this->status])
-            ->andFilterWhere(['like', 'transaction_id', $this->transaction_id]);
+        $query->andFilterWhere(['like', 'transaction_no', $this->transaction_no]);
 
         return $dataProvider;
-    }
-
-
-    public static function saleTransaction($year="")
-    {
-        $records = Sales::find()
-            ->select(['SUM(amount) as total'])
-            ->where(['status' => 1])
-            ->andFilterWhere(['YEAR(created_at)' => $year])
-            ->asArray()
-            ->one()['total'];
-
-        return $records;
     }
 }

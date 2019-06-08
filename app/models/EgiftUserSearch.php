@@ -5,12 +5,12 @@ namespace app\models;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Sales;
+use app\models\EgiftUser;
 
 /**
- * SalesSearch represents the model behind the search form of `app\models\Sales`.
+ * EgiftUserSearch represents the model behind the search form of `app\models\EgiftUser`.
  */
-class SalesSearch extends Sales
+class EgiftUserSearch extends EgiftUser
 {
     /**
      * @inheritdoc
@@ -18,9 +18,9 @@ class SalesSearch extends Sales
     public function rules()
     {
         return [
-            [['id', 'merchant_id', 'transaction_id'], 'integer'],
-            [['status', 'created_at', 'updated_at'], 'safe'],
-            [['amount'], 'number'],
+            [['id', 'user_id', 'egift_id', 'to', 'status'], 'integer'],
+            [['orig_price', 'sale_price'], 'number'],
+            [['updated_at', 'created_at'], 'safe'],
         ];
     }
 
@@ -42,7 +42,7 @@ class SalesSearch extends Sales
      */
     public function search($params)
     {
-        $query = Sales::find();
+        $query = EgiftUser::find();
 
         // add conditions that should always apply here
 
@@ -61,28 +61,16 @@ class SalesSearch extends Sales
         // grid filtering conditions
         $query->andFilterWhere([
             'id' => $this->id,
-            'created_at' => $this->created_at,
+            'user_id' => $this->user_id,
+            'egift_id' => $this->egift_id,
+            'orig_price' => $this->orig_price,
+            'sale_price' => $this->sale_price,
+            'to' => $this->to,
+            'status' => $this->status,
             'updated_at' => $this->updated_at,
-            'merchant_id' => $this->merchant_id,
-            'amount' => $this->amount,
+            'created_at' => $this->created_at,
         ]);
 
-        $query->andFilterWhere(['like', 'status', $this->status])
-            ->andFilterWhere(['like', 'transaction_id', $this->transaction_id]);
-
         return $dataProvider;
-    }
-
-
-    public static function saleTransaction($year="")
-    {
-        $records = Sales::find()
-            ->select(['SUM(amount) as total'])
-            ->where(['status' => 1])
-            ->andFilterWhere(['YEAR(created_at)' => $year])
-            ->asArray()
-            ->one()['total'];
-
-        return $records;
     }
 }

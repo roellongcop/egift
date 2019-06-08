@@ -4,11 +4,11 @@ use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
 /* @var $this yii\web\View */
-/* @var $model app\models\SalesSearch */
+/* @var $model app\models\EgiftUserSearch */
 /* @var $form yii\widgets\ActiveForm */
 ?>
 
-<div class="sales-search">
+<div class="egift-user-search">
 
     <?php $form = ActiveForm::begin([
         'action' => ['index'],
@@ -17,17 +17,21 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'id') ?>
 
-    <?= $form->field($model, 'status') ?>
+    <?= $form->field($model, 'user_id') ?>
 
-    <?= $form->field($model, 'created_at') ?>
+    <?= $form->field($model, 'egift_id') ?>
 
-    <?= $form->field($model, 'updated_at') ?>
+    <?= $form->field($model, 'orig_price') ?>
 
-    <?= $form->field($model, 'merchant_id') ?>
+    <?= $form->field($model, 'sale_price') ?>
 
-    <?php // echo $form->field($model, 'transaction_id') ?>
+    <?php // echo $form->field($model, 'to') ?>
 
-    <?php // echo $form->field($model, 'amount') ?>
+    <?php // echo $form->field($model, 'status') ?>
+
+    <?php // echo $form->field($model, 'updated_at') ?>
+
+    <?php // echo $form->field($model, 'created_at') ?>
 
     <div class="form-group">
         <?= Html::submitButton('Search', ['class' => 'btn btn-primary']) ?>

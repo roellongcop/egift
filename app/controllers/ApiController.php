@@ -18,6 +18,12 @@ use app\models\NatureOfBusiness;
 use app\models\EgiftBranches;
 use app\models\Rating;
 use app\models\Branches;
+use app\models\EgiftUser;
+use app\models\Transaction;
+use app\models\EgiftTransaction;
+use app\models\Sales;
+
+
 class ApiController extends \yii\web\Controller
 {   
 
@@ -26,7 +32,7 @@ class ApiController extends \yii\web\Controller
 
     public function actions()
     {
-        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+        // \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
     }
 
 
@@ -300,12 +306,148 @@ class ApiController extends \yii\web\Controller
        } 
       
       
-             $records = Branches::find()
+        $records = Branches::find()
             ->where(['merchant_id' => $id])
             ->asArray()
             ->all();
         
             return $records;
+    }
+
+
+    public function actionEgiftUser($from="", $to="")
+    {
+        
+        $egift_users = EgiftUser::find()
+            ->with('egift')
+            ->where(['status' => 1, 'user_id' => $from ])
+            ->asArray()
+            ->all();
+
+        foreach ($egift_users as &$egift_user) 
+        {
+            $egift_user['egift']['branches'] = EgiftBranches::find()
+                ->with('branches')
+                ->where(['egift_id' => $egift_user['egift_id']])
+                ->asArray()
+                ->all();
+
+
+            if ($to) {
+                $egift_user['to_user'] = User::find()
+                    ->with('profile')
+                    ->where(['id' => $to])
+                    ->asArray()
+                    ->one();
+            }
+        }
+
+        return $egift_users;
+    }
+
+
+
+    public function actionUpdateStock($egift_id="", $quantity="")
+    {
+        $egift = Egift::findOne($egift_id);
+        $egift->stock = $egift->stock - $quantity;
+
+        if ($egift->save()) {
+
+            $model = Egift::find($egift_id)
+                ->asArray()
+                ->one();
+
+            return $model;
+        }
+    }
+
+
+    public function actionSaveTransaction()
+    {
+
+        // =================================
+        // SAMPLE DATA
+        $post = [
+            'user_id' => 1,
+            'egift' => [
+                [
+                    'egift_id' => 1,
+                    'merchant_id' => 1,
+                    'orig_price' => 100,
+                    'sale_price' => 100,
+                    'quantity' => 10,
+                    'status' => 1,
+                    'to' => ''
+                ],
+                [
+                    'egift_id' => 2,
+                    'merchant_id' => 2,
+                    'orig_price' => 100,
+                    'sale_price' => 100,
+                    'quantity' => 20,
+                    'status' => 2,
+                    'to' => 2
+                ]
+            ]
+        ];
+        // =================================
+
+        // $post = Yii::$app->request->post();
+        $transaction_no = 'er'. time();
+
+        $transaction = new Transaction();
+        $transaction->transaction_no = $transaction_no;
+        $transaction->user_id = $post['user_id'];
+
+        if ($transaction->save()) {
+            foreach ($post['egift'] as $egift) 
+            {
+                $this->saveEgiftTransaction($egift, $transaction->id);
+                $this->saveEgiftUser($egift, $post['user_id']);
+                $this->saveSales($egift, $transaction->id);
+            }
+
+            
+        }
+    }
+
+    public function saveSales($post, $transaction_id)
+    {
+        $sales = new Sales();
+        $sales->merchant_id = $post['merchant_id'];
+        $sales->transaction_id = $transaction_id;
+        $sales->amount = $post['orig_price'];
+        $sales->status = 1;
+
+        return $sales->save();
+    }
+
+
+    public function saveEgiftTransaction($post, $transaction_id)
+    {
+        $model = new EgiftTransaction();
+        $model->egift_id = $post['egift_id'];
+        $model->transaction_id = $transaction_id;
+        $model->orig_price = $post['orig_price'];
+        $model->sale_price = $post['sale_price'];
+        $model->quantity = $post['quantity'];
+        $model->status = $post['status'];
+
+        return $model->save();
+    }
+
+    public function saveEgiftUser($post, $user_id)
+    {
+        $egift = new EgiftUser();
+        $egift->egift_id = $post['egift_id'];
+        $egift->user_id = $user_id;
+        $egift->orig_price = $post['orig_price'];
+        $egift->sale_price = $post['sale_price'];
+        $egift->to = ($post['to']) ? $post['to']: 0;
+        $egift->status = $post['status'];
+
+        return $egift->save();
     }
 
 
