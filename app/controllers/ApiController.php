@@ -368,32 +368,32 @@ class ApiController extends \yii\web\Controller
 
         // =================================
         // SAMPLE DATA
-        $post = [
-            'user_id' => 1,
-            'egift' => [
-                [
-                    'egift_id' => 1,
-                    'merchant_id' => 1,
-                    'orig_price' => 100,
-                    'sale_price' => 100,
-                    'quantity' => 10,
-                    'status' => 1,
-                    'to' => ''
-                ],
-                [
-                    'egift_id' => 2,
-                    'merchant_id' => 2,
-                    'orig_price' => 100,
-                    'sale_price' => 100,
-                    'quantity' => 20,
-                    'status' => 2,
-                    'to' => 2
-                ]
-            ]
-        ];
+        // $post = [
+        //     'user_id' => 1,
+        //     'egift' => [
+        //         [
+        //             'egift_id' => 1,
+        //             'merchant_id' => 1,
+        //             'orig_price' => 100,
+        //             'sale_price' => 100,
+        //             'quantity' => 10,
+        //             'status' => 1,
+        //             'to' => ''
+        //         ],
+        //         [
+        //             'egift_id' => 2,
+        //             'merchant_id' => 2,
+        //             'orig_price' => 100,
+        //             'sale_price' => 100,
+        //             'quantity' => 20,
+        //             'status' => 2,
+        //             'to' => 2
+        //         ]
+        //     ]
+        // ];
         // =================================
 
-        // $post = Yii::$app->request->post();
+        $post = Yii::$app->request->post();
         $transaction_no = 'er'. time();
 
         $transaction = new Transaction();
