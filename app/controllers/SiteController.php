@@ -178,7 +178,7 @@ class SiteController extends Controller
         $user = User::findOne(['auth_key' => $auth_key]);
 
         $model = Profile::findOne(['user_id' => $user->id]);
-        $model->scenario = 'create';
+        // $model->scenario = 'create';
         $model->user_id = $user->id;
 
         $user->scenario = 'update';
