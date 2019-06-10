@@ -166,7 +166,11 @@ class Egift extends \yii\db\ActiveRecord
     public function get_branches()
     {
         if($this->branches) {
-            return ($this->branches) ? json_decode($this->branches): []; 
+            if(is_array($this->branches)) {
+                return $this->branches;
+            }
+
+            return json_decode($this->branches); 
         }
 
         return [];
@@ -221,7 +225,7 @@ class Egift extends \yii\db\ActiveRecord
                 $this->image_banner_input->saveAs($image_banner_path, false);
 
                 $this->image_banner = $image_banner_path;
-                }
+            }
 
             return true;
         }

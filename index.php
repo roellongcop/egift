@@ -4,7 +4,7 @@
 defined('YII_DEBUG') or define('YII_DEBUG', true);
 defined('YII_ENV') or define('YII_ENV', 'dev');
 
-defined('QR_URL') or define('QR_URL', 'http://localhost:8080/egift/app/components/phpqrcode/index.php');
+defined('QR_URL') or define('QR_URL', 'http://localhost/egift/app/components/phpqrcode/index.php');
 
 require __DIR__ . '/app/vendor/autoload.php';
 require __DIR__ . '/app/vendor/yiisoft/yii2/Yii.php';

@@ -123,12 +123,12 @@ class EgiftController extends Controller
     public function actionCreate()
     {
         $model = new Egift();
-        // $model->scenario = 'create';
+        $model->scenario = 'create';
         $price_variety = new PriceVariety();
 
         $model->merchant_id = Yii::$app->user->identity->user_type === 9? $model->merchant_id:Yii::$app->user->identity->id;
 
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+        if ($model->load(Yii::$app->request->post())) {
 
             $uploadPath = Yii::$app->template->createFolder(['uploads', 'egifts']); 
             $model->image_input = UploadedFile::getInstance($model, 'image_input');
