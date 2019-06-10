@@ -10,7 +10,7 @@ use yii\helpers\Url;
 $this->title = 'Authorization Email';
 $this->params['breadcrumbs'][] = $this->title;
 
-$url = Url::to(['site/authorization', 'auth_key' => $model->auth_key], 'http');
+$url = Url::to(['site/authorization', 'auth_key' => $model->auth_key], true);
 
 ?>
 
