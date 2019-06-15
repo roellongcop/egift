@@ -53,17 +53,14 @@ class ApiController extends \yii\web\Controller
 
         $model = new LoginForm();
 
-        if(Yii::$app->request->post())
-        {
+        if(Yii::$app->request->post()) {
             $data = [];
             $data['LoginForm'] = Yii::$app->request->post();
 
-            if ($model->load($data) && $model->login() ) 
-            {
+            if ($model->load($data) && $model->login() ) {
                 return [ $model->_user->attributes ];
             }
-            else
-            {
+            else {
                 return false;
             }
         }
@@ -77,8 +74,7 @@ class ApiController extends \yii\web\Controller
     {
         $model = User::findOne(['email' => Yii::$app->request->post('email')]);
 
-        if($model)
-        {
+        if($model) {
             return true;
         }
 
@@ -92,14 +88,12 @@ class ApiController extends \yii\web\Controller
 
         $model = new User();
 
-        if(Yii::$app->request->post())
-        {
+        if(Yii::$app->request->post()) {
             $data = [];
 
             $data['User'] = Yii::$app->request->post();
 
-            if ($model->load($data)) 
-            {     
+            if ($model->load($data)) {
                 $model->username = $model->email;
                 $model->role_id = 0;
                 $model->password_repeat = $model->password;
@@ -107,8 +101,8 @@ class ApiController extends \yii\web\Controller
                 $model->user_type = 6;
                 $model->setPassword();
 
-                if ($model->save()) 
-                { 
+                if ($model->save()) {
+
                     $profile = new Profile();
                     $profile->user_id = $model->id;
                     
@@ -155,16 +149,14 @@ class ApiController extends \yii\web\Controller
 
     public function actionEgift($id = "",$pullVariety = true)
     {
-        if($id === "") 
-        {
+        if($id === "") {
             $records = Egift::find()
             ->where(['status' => 1])
             ->with('profile')
             ->asArray()
             ->all();
 
-            foreach ($records as &$rec) 
-            {
+            foreach ($records as &$rec) {
                  $rec['merchant']      = $this->actionMerchant($rec['merchant_id']); 
             }
             
@@ -180,8 +172,10 @@ class ApiController extends \yii\web\Controller
 
         $records['merchant']      = $this->actionMerchant($records['merchant_id']); 
 
-        if($pullVariety)
-        $records['price_variety'] = $this->actionPriceVariety($records['id']);
+        if($pullVariety) {
+        	$records['price_variety'] = $this->actionPriceVariety($records['id']);
+        }
+        
 
         //print_r($records); die();
          return $records;
@@ -192,15 +186,13 @@ class ApiController extends \yii\web\Controller
 
     public function actionEgiftsByMerchant($merchant_id = "")
     {
-        if($merchant_id === "") 
-        {
+        if($merchant_id === "") {
             $egifts = Egift::find()
                 ->where(['status' => 1])
                 ->asArray()
                 ->all();
         }
-        else
-        {
+        else {
             $egifts = Egift::find()
             ->where(['status' => 1, 'merchant_id' => $merchant_id])
             ->asArray()
@@ -208,10 +200,8 @@ class ApiController extends \yii\web\Controller
         }
 
 
-        if($egifts)
-        {
-            foreach ($egifts as &$egift) 
-            {
+        if($egifts) {
+            foreach ($egifts as &$egift) {
                 $egift['branches'] = $this->actionBranchesByEgift($egift['id']);
             }
         }
@@ -234,8 +224,7 @@ class ApiController extends \yii\web\Controller
     public function actionCategories($id = "")
     {
             
-        if ($id === "") 
-        {
+        if ($id === "") {
             $records = NatureOfBusiness::find()
                 ->where(['status' => 0])
                 ->asArray()
@@ -261,8 +250,7 @@ class ApiController extends \yii\web\Controller
     public function actionMerchant($id = "")
     {
 
-        if($id === "") 
-        {
+        if($id === "") {
             $records = Profile::find()
                 ->select(['*'])
                 ->alias('p')
@@ -272,8 +260,7 @@ class ApiController extends \yii\web\Controller
                 ->asArray()
                 ->all();
 
-            foreach ($records as &$rec) 
-            {
+            foreach ($records as &$rec) {
                 $rec['ratings']  = $this->actionRatingByMerchant($rec['id']);
                 $rec['egifts']   = $this->actionEgiftsByMerchant($rec['id']);
                 $rec['branches'] = $this->actionBranches($rec['id']);
@@ -319,8 +306,7 @@ class ApiController extends \yii\web\Controller
     
     public function actionBranches($id="")
     {
-       if($id === "")
-       {
+       if($id === "") {
             $records = Branches::find()
             ->asArray()
             ->all();
@@ -340,9 +326,9 @@ class ApiController extends \yii\web\Controller
 
 
 /* added by dan */
-    public function actionPriceVariety($id=""){
-       if($id === "")
-       {
+    public function actionPriceVariety($id="")
+    {
+       if($id === "") {
             $records = PriceVariety::find()
             ->asArray()
             ->all();
@@ -351,7 +337,7 @@ class ApiController extends \yii\web\Controller
        } 
       
       
-             $records = PriceVariety::find()
+		$records = PriceVariety::find()
             ->where(['egift_id' => $id])
             ->asArray()
             ->all();
@@ -372,9 +358,9 @@ class ApiController extends \yii\web\Controller
     }
 
 
-    public function actionUser($id=""){
-        if($id === "") 
-        {
+    public function actionUser($id="")
+    {
+        if($id === "") {
             $records = Profile::find()
                 ->select(['*'])
                 ->alias('p')
@@ -451,8 +437,8 @@ class ApiController extends \yii\web\Controller
             ->asArray()
             ->all();
 
-        foreach ($egift_users as &$egift_user) 
-        {
+        foreach ($egift_users as &$egift_user) {
+
             $egift_user['egift']['branches'] = EgiftBranches::find()
                 ->with('branches')
                 ->where(['egift_id' => $egift_user['egift_id']])
@@ -531,8 +517,7 @@ class ApiController extends \yii\web\Controller
 
         if ($transaction->save()) {
             
-            foreach ($post['egift'] as $egift) 
-            {
+            foreach ($post['egift'] as $egift) {
                 $this->saveEgiftTransaction($egift, $transaction->id);
                 $this->saveEgiftUser($egift, $post['user_id']);
                 $this->saveSales($egift, $transaction->id);
