@@ -14,7 +14,7 @@ $records = NatureOfBusinessSearch::lists(false, 6);
                 <section class="enlarge">
                     <div class="content">
                         <header>
-                            <a href="#" class="icon <?= $nob->icon->name ?>">
+                            <a href="#" class="icon <?= $nob->icon ?  $nob->icon->name: '' ?>">
                                 <span class="label"><?= $nob->_name ?></span>
                             </a>
                             <h3><?= $nob->_name ?></h3>

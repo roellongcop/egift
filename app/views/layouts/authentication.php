@@ -7,6 +7,7 @@ use yii\helpers\Html;
 use app\assets\AppAsset;
 
 $asset = AppAsset::register($this);
+
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
