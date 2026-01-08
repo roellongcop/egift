@@ -18,7 +18,7 @@ class EgiftUsageSearch extends EgiftUsage
     public function rules()
     {
         return [
-            [['id', 'egift_id'], 'integer'],
+            [['id', 'egift_id', 'user_id'], 'integer'],
             [['date_used', 'status'], 'safe'],
         ];
     }
@@ -61,11 +61,24 @@ class EgiftUsageSearch extends EgiftUsage
         $query->andFilterWhere([
             'id' => $this->id,
             'egift_id' => $this->egift_id,
+            'user_id' => $this->user_id,
             'date_used' => $this->date_used,
         ]);
 
         $query->andFilterWhere(['like', 'status', $this->status]);
 
         return $dataProvider;
+    }
+
+
+    public static function usage($year='')
+    {
+        $records = EgiftUsage::find()
+            ->where(['status' => 1])
+            ->andFilterWhere(['YEAR(created_at)' => $year])
+            ->asArray()
+            ->all();
+
+        return $records;
     }
 }

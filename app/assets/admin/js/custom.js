@@ -49,8 +49,7 @@ $(document).ready(function() {
     $(document).on('click', '.btn-add-sub-menu', function() {
         var self = this;
         var main_key = $(self).closest('.main-menu-panel').data('key');
-
-        console.log(main_key);
+ 
         
         $.ajax({
             url: base_url + 'role/get-sub-menu',
@@ -147,6 +146,161 @@ $(document).ready(function() {
         }); 
     }
 
+    var createEgiftCreationChart = function(element, labels, data) {
+        var cardChart2 = new Chart(element, {
+            type: 'line',
+            data: {
+              labels: labels,
+              datasets: [{
+                label: 'Created Egift',
+                backgroundColor: getStyle('--info'),
+                borderColor: 'rgba(255,255,255,.55)',
+                data: data
+              }]
+            },
+            options: {
+              maintainAspectRatio: false,
+              legend: {
+                display: false
+              },
+              scales: {
+                xAxes: [{
+                  gridLines: {
+                    color: 'transparent',
+                    zeroLineColor: 'transparent'
+                  },
+                  ticks: {
+                    fontSize: 2,
+                    fontColor: 'transparent'
+                  }
+                }],
+                yAxes: [{
+                  display: false,
+                  ticks: {
+                    display: false,
+                    min: -4,
+                    max: 39
+                  }
+                }]
+              },
+              elements: {
+                line: {
+                  tension: 0.00001,
+                  borderWidth: 1
+                },
+                point: {
+                  radius: 4,
+                  hitRadius: 10,
+                  hoverRadius: 4
+                }
+              }
+            }
+          }); // eslint-disable-next-line no-unused-vars 
+    }
+
+    var createSaleTransactionChart = function(element, labels, data) {
+        var cardChart3 = new Chart(element, {
+            type: 'line',
+            data: {
+              labels: labels,
+              datasets: [{
+                label: 'Total Sales',
+                backgroundColor: 'rgba(255,255,255,.2)',
+                borderColor: 'rgba(255,255,255,.55)',
+                data: data
+              }]
+            },
+            options: {
+              maintainAspectRatio: false,
+              legend: {
+                display: false
+              },
+              scales: {
+                xAxes: [{
+                  display: false
+                }],
+                yAxes: [{
+                  display: false
+                }]
+              },
+              elements: {
+                line: {
+                  borderWidth: 2
+                },
+                point: {
+                  radius: 0,
+                  hitRadius: 10,
+                  hoverRadius: 4
+                }
+              }
+            }
+          });
+    }
+
+    var createEgiftUsage = function(element, labels, data) {
+        var cardChart4 = new Chart(element, {
+            type: 'bar',
+            data: {
+              labels: labels,
+              datasets: [{
+                label: 'Egift Usage',
+                backgroundColor: 'rgba(255,255,255,.2)',
+                borderColor: 'rgba(255,255,255,.55)',
+                data: data
+              }]
+            },
+            options: {
+              maintainAspectRatio: false,
+              legend: {
+                display: false
+              },
+              scales: {
+                xAxes: [{
+                  display: false,
+                  barPercentage: 0.6
+                }],
+                yAxes: [{
+                  display: false
+                }]
+              }
+            }
+          });
+    }
+
+
+    
+    var createLabelAndData = function(array) {
+        var total = [];
+        var month = [];
+
+        array.forEach(r => {
+
+            total.push(Number(r.total))
+            month.push(r.month)
+        });
+
+        return {total: total, month: month};
+    }
+
+
+    if ($('#super-admin-dashboard').length) {
+
+        $.ajax({
+            url: base_url + 'dashboard/chart',
+            dataType: 'json',
+            success: (res => { 
+                console.log(res);
+                createChart($('#card-chart1'),res.merchant.month, res.merchant.total);
+
+                createEgiftCreationChart($('#card-chart2'), res.egift_creation.month, res.egift_creation.total);
+
+                createSaleTransactionChart($('#card-chart3'), res.sale.month, res.sale.total);
+
+                createEgiftUsage($('#card-chart4'), res.egift_usage.month, res.egift_usage.total);
+            })
+        })
+        
+    }
 
     var isPromo = function() {
         if ($('#egift-promo').is(':checked')) {
@@ -161,30 +315,6 @@ $(document).ready(function() {
         isPromo();
     })
     isPromo();
-
-
-    if ($('#card-chart1').length) {
-
-        $.ajax({
-            url: base_url + 'dashboard/chart',
-            dataType: 'json',
-            method: 'get',
-            data: {type: 'merchants'},
-            success: (res => {
-
-                var total = [];
-                var month = [];
-                res.forEach(r => {
-                    total.push(Number(r.total))
-                    month.push(r.month)
-                });
-
-                createChart($('#card-chart1'), month, total);
-
-            })
-        })
-        
-    }
 
 
 
@@ -503,7 +633,7 @@ $(document).ready(function() {
     var showLoader = function() {
         $('.fa-spinner').addClass('fa-spin');
         $('.fa-spinner').show();
-        $('#image-preview').hide();
+        // $('#image-preview').hide();
     }
 
     $('#profile-logo_input').on("change", function() {
@@ -511,6 +641,16 @@ $(document).ready(function() {
         previewImage('profile-logo_input');
     });
 
+
+    $('#egift-image_banner_input').on("change", function() {
+        showLoader();
+        previewImage('egift-image_banner_input', '#image-preview-banner');
+    });
+
+    $('#profile-logo_banner_input').on("change", function() {
+        showLoader();
+        previewImage('profile-logo_banner_input', '#image-preview-banner');
+    });
 
 
     $('#egift-image_input').on("change", function() {
@@ -539,13 +679,20 @@ $(document).ready(function() {
 
 
 
-    function previewImage(id) {
+    function previewImage(id, holder="") {
         var oFReader = new FileReader();
         oFReader.readAsDataURL(document.getElementById(id).files[0]);
 
         oFReader.onload = function(oFREvent) {
-            $('#image-preview').attr('src', oFREvent.target.result);
-            $('#image-preview').show();
+            if (holder === "") {
+                $('#image-preview').attr('src', oFREvent.target.result);
+                $('#image-preview').show();
+            }
+            else {
+                $(holder).attr('src', oFREvent.target.result);
+                $(holder).show();
+            }
+
             $('.fa-spinner').removeClass('fa-spin');
             $('.fa-spinner').hide();
         };

@@ -14,7 +14,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'egift_id')->textInput() ?>
 
-    <?= $form->field($model, 'date_used')->textInput() ?>
+    <?= $form->field($model, 'created_at')->textInput() ?>
 
     <?= $form->field($model, 'status')->textInput() ?>
 

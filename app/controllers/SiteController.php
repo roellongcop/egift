@@ -175,13 +175,10 @@ class SiteController extends Controller
 
     public function actionAuthorization($auth_key)
     {
-
-
         $user = User::findOne(['auth_key' => $auth_key]);
 
-
         $model = Profile::findOne(['user_id' => $user->id]);
-
+        // $model->scenario = 'update';
         $model->user_id = $user->id;
 
         $user->scenario = 'update';
@@ -197,6 +194,7 @@ class SiteController extends Controller
 
             $uploadPath = Yii::$app->template->createFolder(['uploads', 'merchant']); 
             $model->logo_input = UploadedFile::getInstance($model, 'logo_input');
+            $model->logo_banner_input = UploadedFile::getInstance($model, 'logo_banner_input');
             $model->upload($uploadPath);
             $model->save();
 
@@ -257,5 +255,14 @@ class SiteController extends Controller
             'dataProvider' => $dataProvider,
         ]);
 
+    }
+
+    public function actionTest($value='')
+    {
+        $mail = Yii::$app->mailer->compose()
+            ->setFrom(['carmonahmo@gmail.com' => 'Egift Rewards'])
+            ->setTo('longcoproel@gmail.com')
+            ->setSubject('Merchant | Registration') 
+            ->send();
     }
 }

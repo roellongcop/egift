@@ -204,6 +204,7 @@ class UserController extends Controller
             $uploadPath = Yii::$app->template->createFolder(['uploads', 'merchant']); 
 
             $model->logo_input = UploadedFile::getInstance($model, 'logo_input');
+            $model->logo_banner_input = UploadedFile::getInstance($model, 'logo_banner_input');
             $model->upload($uploadPath);
             $model->save();
 

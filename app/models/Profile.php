@@ -20,6 +20,7 @@ use Yii;
  */
 class Profile extends \yii\db\ActiveRecord
 {
+    public $logo_banner_input;
     public $logo_input;
     public $authorized;
     /**
@@ -37,11 +38,14 @@ class Profile extends \yii\db\ActiveRecord
     {
         return [
             [['name', 'description', 'tel_no', 'address', 'allowed_egifts'], 'required'],
+            [['logo_banner_input', 'logo_input',], 'required', 'on' => 'create'],
             [['user_id', 'authorized'], 'integer'],
-            [['description', 'address', 'logo'], 'string'],
+            [['description', 'address', 'logo', 'logo_banner'], 'string'],
             [['created_at', 'updated_at', 'nature_of_business'], 'safe'],
+            [['first_name', 'last_name'], 'string', 'max' => 191],
             [['name'], 'string', 'max' => 256],
             [['tel_no'], 'string', 'max' => 64],
+            [['logo_banner_input'], 'file', 'skipOnEmpty' => true, 'extensions' => 'jpg, jpeg, png, svg'],
             [['logo_input'], 'file', 'skipOnEmpty' => true, 'extensions' => 'jpg, jpeg, png, svg'],
 
         ];
@@ -56,6 +60,8 @@ class Profile extends \yii\db\ActiveRecord
             'id' => 'ID',
             'user_id' => 'User ID',
             'name' => 'Merchant Name',
+            'first_name' => 'First Name',
+            'last_name' => 'Last Name',
             'authorized' => 'Authorized',
             'description' => 'Merchant Description',
             'tel_no' => 'Telephone No',
@@ -67,6 +73,7 @@ class Profile extends \yii\db\ActiveRecord
             '_created' => 'Created At',
             '_updated' => 'Updated At',
             'logo_input' => 'Upload Company Image',
+            'logo_banner_input' => 'Upload Company Banner Image',
         ];
     }
 
@@ -150,14 +157,27 @@ class Profile extends \yii\db\ActiveRecord
      
     public function upload($uploadPath)
     {
-        if ($this->validate() && $this->logo_input) { 
-            $path = $uploadPath .
-                $this->logo_input->baseName . '.' . 
-                $this->logo_input->extension;
+        if ($this->validate()) {
+            if ($this->logo_input) {
+                $logo_path = $uploadPath .
+                    $this->logo_input->baseName . '.' . 
+                    $this->logo_input->extension;
 
-            $this->logo_input->saveAs($path, false);
+                $this->logo_input->saveAs($logo_path, false);
 
-            $this->logo = $path;
+                $this->logo = $logo_path;
+            } 
+
+
+            if ($this->logo_banner_input) {
+                $logo_banner_path = $uploadPath .
+                    $this->logo_banner_input->baseName . '.' . 
+                    $this->logo_banner_input->extension;
+
+                $this->logo_banner_input->saveAs($logo_banner_path, false);
+
+                $this->logo_banner = $logo_banner_path;
+            } 
 
             return true;
         }

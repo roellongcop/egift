@@ -28,9 +28,9 @@ class EgiftUsage extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['egift_id', 'status'], 'required'],
-            [['egift_id'], 'integer'],
-            [['date_used'], 'safe'],
+            [['egift_id', 'status', 'user_id'], 'required'],
+            [['egift_id', 'user_id'], 'integer'],
+            [['created_at'], 'safe'],
             [['status'], 'string', 'max' => 1],
         ];
     }
@@ -43,7 +43,8 @@ class EgiftUsage extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'egift_id' => 'Egift ID',
-            'date_used' => 'Date Used',
+            'user_id' => 'User ID',
+            'created_at' => 'Date Used',
             'status' => 'Status',
         ];
     }

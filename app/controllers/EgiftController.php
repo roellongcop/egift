@@ -123,25 +123,20 @@ class EgiftController extends Controller
     public function actionCreate()
     {
         $model = new Egift();
+        $model->scenario = 'create';
         $price_variety = new PriceVariety();
-
-        
 
         $model->merchant_id = Yii::$app->user->identity->user_type === 9? $model->merchant_id:Yii::$app->user->identity->id;
 
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
-
-            
-            // $model->branches = json_encode($model->branches);
-
+        if ($model->load(Yii::$app->request->post())) {
 
             $uploadPath = Yii::$app->template->createFolder(['uploads', 'egifts']); 
             $model->image_input = UploadedFile::getInstance($model, 'image_input');
+            $model->image_banner_input = UploadedFile::getInstance($model, 'image_banner_input');
             $model->upload($uploadPath);
 
             $model->qr_code = $this->generateCode();
             $model->qr_image = Yii::$app->template->generateQR($model->qr_code);
-
 
             if ($model->save()) {
 
@@ -207,20 +202,22 @@ class EgiftController extends Controller
     {
         $model = $this->findModel($id);
 
-        $model->merchant_id = Yii::$app->user->identity->user_type === 0? $model->merchant_id:Yii::$app->user->identity->id;
+        $model->merchant_id = (Yii::$app->user->identity->user_type === 9) ? $model->merchant_id:Yii::$app->user->identity->id;
 
-       
-        
-        if ($model->load(Yii::$app->request->post()) && $model->validate()) {
+        if ($model->load(Yii::$app->request->post())) {
             $model->branches = isset(Yii::$app->request->post()['Egift']['branches'])? json_encode($model->branches): '';
 
             $uploadPath = Yii::$app->template->createFolder(['uploads', 'egifts']); 
             $model->image_input = UploadedFile::getInstance($model, 'image_input');
-            $model->upload($uploadPath);
+            $model->image_banner_input = UploadedFile::getInstance($model, 'image_banner_input');
 
-            if ($model->save()) {
-                return $this->redirect(['view', 'id' => $model->id]);
-            } 
+            if ($model->validate()) {
+                $model->upload($uploadPath);
+
+                if ($model->save()) {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
+            }
         }
 
 

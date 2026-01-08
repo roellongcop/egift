@@ -2,10 +2,10 @@
 
 namespace app\controllers;
 
-// header('Access-Control-Allow-Origin: *');  
-   
-//  header('Access-Control-Allow-Methods: GET,PUT,POST,DELETE,PATCH,OPTIONS');
-//  header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept, Authorization');
+header('Access-Control-Allow-Origin: *');  
+header('Access-Control-Allow-Methods: GET,PUT,POST,DELETE,PATCH,OPTIONS');
+header('Access-Control-Allow-Headers: * , X-Requested-With, Content-Type, Accept, Authorization');
+header('Content-Type: application/x-www-form-urlencoded');   
      
 use Yii;
 use app\models\LoginForm;
@@ -17,22 +17,27 @@ use app\models\Egift;
 use app\models\NatureOfBusiness;
 use app\models\EgiftBranches;
 use app\models\Rating;
+use app\models\Branches;
+use app\models\PriceVariety;
+
+use app\models\EgiftUsage;
+use app\models\EgiftUser;
+use app\models\Transaction;
+use app\models\EgiftTransaction;
+use app\models\Sales;
+
 
 class ApiController extends \yii\web\Controller
-{	
+{   
 
-	public $layout = 'plain';
+    public $layout = 'plain';
 
 
     public function actions()
     {
-        // \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
     }
 
-    protected function _return($data)
-    {
-        print_r($data); die;
-    }
 
 
 
@@ -50,34 +55,34 @@ class ApiController extends \yii\web\Controller
 
         if(Yii::$app->request->post())
         {
-        	$data = [];
-        	$data['LoginForm'] = Yii::$app->request->post();
+            $data = [];
+            $data['LoginForm'] = Yii::$app->request->post();
 
-	        if ($model->load($data) && $model->login() ) 
+            if ($model->load($data) && $model->login() ) 
             {
-	            return [ $model->_user->attributes ];
-	        }
-	        else
+                return [ $model->_user->attributes ];
+            }
+            else
             {
-	        	return false;
-	        }
-    	}
+                return false;
+            }
+        }
 
-    	return false;
+        return false;
     }
 
 
 
     public function actionCheckEmail()
     {
-    	$model = User::findOne(['email' => Yii::$app->request->post('email')]);
+        $model = User::findOne(['email' => Yii::$app->request->post('email')]);
 
-    	if($model)
+        if($model)
         {
-    		return true;
-    	}
+            return true;
+        }
 
-    	return false;
+        return false;
     }
 
 
@@ -89,11 +94,11 @@ class ApiController extends \yii\web\Controller
 
         if(Yii::$app->request->post())
         {
-        	$data = [];
+            $data = [];
 
-        	$data['User'] = Yii::$app->request->post();
+            $data['User'] = Yii::$app->request->post();
 
-	        if ($model->load($data)) 
+            if ($model->load($data)) 
             {     
                 $model->username = $model->email;
                 $model->role_id = 0;
@@ -103,15 +108,20 @@ class ApiController extends \yii\web\Controller
                 $model->setPassword();
 
                 if ($model->save()) 
-                {
+                { 
+                    $profile = new Profile();
+                    $profile->user_id = $model->id;
+                    
+                    $profile->save(false);
+                    
                     return [ $model->attributes ];
                 }
 
                 return [$model->errors];
-	        }
-    	}
+            }
+        }
 
-        return false;	
+        return false;   
     }
 
 
@@ -143,15 +153,21 @@ class ApiController extends \yii\web\Controller
     }
 
 
-    public function actionEgift($id = "")
+    public function actionEgift($id = "",$pullVariety = true)
     {
         if($id === "") 
         {
             $records = Egift::find()
             ->where(['status' => 1])
+            ->with('profile')
             ->asArray()
             ->all();
 
+            foreach ($records as &$rec) 
+            {
+                 $rec['merchant']      = $this->actionMerchant($rec['merchant_id']); 
+            }
+            
             return $records;
         }
 
@@ -159,9 +175,19 @@ class ApiController extends \yii\web\Controller
             ->where(['id' => $id])
             ->asArray()
             ->one();
+            
+            
 
-        return $records;
+        $records['merchant']      = $this->actionMerchant($records['merchant_id']); 
+
+        if($pullVariety)
+        $records['price_variety'] = $this->actionPriceVariety($records['id']);
+
+        //print_r($records); die();
+         return $records;
     }
+
+
 
 
     public function actionEgiftsByMerchant($merchant_id = "")
@@ -190,8 +216,6 @@ class ApiController extends \yii\web\Controller
             }
         }
 
-        print_r($egifts);
-        die;
         return $egifts;
     }   
 
@@ -250,11 +274,13 @@ class ApiController extends \yii\web\Controller
 
             foreach ($records as &$rec) 
             {
-                $rec['ratings'] = $this->actionRatingByMerchant($rec['id']);
+                $rec['ratings']  = $this->actionRatingByMerchant($rec['id']);
+                $rec['egifts']   = $this->actionEgiftsByMerchant($rec['id']);
+                $rec['branches'] = $this->actionBranches($rec['id']);
             }
 
-
-            print_r($records); die;
+           // print_r($records); exit();
+            return $records;
         }
 
         $records = Profile::find()
@@ -267,11 +293,13 @@ class ApiController extends \yii\web\Controller
             ->one();
 
 
-        $records['ratings'] = $this->actionRatingByMerchant($rec['id']);
-
+            $records['ratings']  = $this->actionRatingByMerchant($records['id']);
+            $records['egifts']   = $this->actionEgiftsByMerchant($records['id']);
+            $records['branches'] = $this->actionBranches($records['id']);
          
-
-        return $this->_return($records);
+        
+       // print_r($records); exit();
+        return $records;
     }
 
 
@@ -284,9 +312,275 @@ class ApiController extends \yii\web\Controller
 
         return $ratings;
     }
+    
+    
+    
+
+    
+    public function actionBranches($id="")
+    {
+       if($id === "")
+       {
+            $records = Branches::find()
+            ->asArray()
+            ->all();
+        
+            return $records;
+       } 
+      
+      
+        $records = Branches::find()
+            ->where(['merchant_id' => $id])
+            ->asArray()
+            ->all();
+        
+            return $records;
+    }
 
 
 
+/* added by dan */
+    public function actionPriceVariety($id=""){
+       if($id === "")
+       {
+            $records = PriceVariety::find()
+            ->asArray()
+            ->all();
+        
+            return $records;
+       } 
+      
+      
+             $records = PriceVariety::find()
+            ->where(['egift_id' => $id])
+            ->asArray()
+            ->all();
+
+            //$records['egift_detail'] = $this->actionEgift($records['egift_id'],false);
+            return $records;        
+    }
+
+    public function actionGetPriceVariety($id=""){
+ 
+             $records = PriceVariety::find()
+            ->where(['id' => $id])
+            ->asArray()
+            ->one();
+
+            $records['egift_detail'] = $this->actionEgift($records['egift_id'],false);
+            return $records;        
+    }
+
+
+    public function actionUser($id=""){
+        if($id === "") 
+        {
+            $records = Profile::find()
+                ->select(['*'])
+                ->alias('p')
+                ->where(['u.user_type' => 6])
+                ->joinWith('user u')
+                ->groupBy('u.id')
+                ->asArray()
+                ->all();
+
+
+            return $records;
+        }
+
+
+        $records = Profile::find()
+            ->select(['*'])
+            ->alias('p')
+            ->where(['u.id'=> $id,'u.user_type' => 6])
+            ->joinWith('user u')
+            ->groupBy('u.id')
+            ->asArray()
+            ->one();
+
+        return $records;        
+    }
+
+    public function actionSaveUser($id){
+         $model = User::findOne( $id );
+        
+        // var_dump($model);
+        
+        return [$model->attributes];
+    }
+    
+    
+    public function actionSaveProfile($id){
+         $model = Profile::findOne(['user_id' => $id]);
+        
+        // var_dump($model);
+        
+        return [$model->attributes];
+    }
+    
+    
+    public function actionSaveEgiftUser($id){
+        $model      = EgiftUser::findOne($id);
+        $egiftUsage = new EgiftUsage();
+        
+        
+        $egiftUsage->egift_id = $model->egift_id ;
+        $egiftUsage->user_id  = $model->user_id ;
+        
+        $model->delete();
+        
+        return $egiftUsage->save(false);
+        
+    }
+/* added by dan */
+
+
+
+    /*============================================================
+    PATCH-2019-06-08
+    ============================================================*/
+
+
+
+    public function actionEgiftUser($from="", $to="")
+    {
+        
+        $egift_users = EgiftUser::find()
+            ->with('egift')
+            ->where(['status' => 1, 'user_id' => $from ])
+            ->asArray()
+            ->all();
+
+        foreach ($egift_users as &$egift_user) 
+        {
+            $egift_user['egift']['branches'] = EgiftBranches::find()
+                ->with('branches')
+                ->where(['egift_id' => $egift_user['egift_id']])
+                ->asArray()
+                ->all();
+                
+             $egift_user['merchant'] = $this->actionMerchant($egift_user['egift']['merchant_id']);
+
+
+            if ($to) {
+                $egift_user['to_user'] = User::find()
+                    ->with('profile')
+                    ->where(['id' => $to])
+                    ->asArray()
+                    ->one();
+            }
+        }
+
+        return $egift_users;
+    }
+
+
+
+    public function actionUpdateStock($egift_id="", $quantity="")
+    {
+        $egift = Egift::findOne($egift_id);
+        $egift->stock = $egift->stock - $quantity;
+
+        if ($egift->save()) {
+
+            $model = Egift::find($egift_id)
+                ->asArray()
+                ->one();
+
+            return $model;
+        }
+    }
+
+
+    public function actionSaveTransaction()
+    {
+
+        // =================================
+        // SAMPLE DATA
+        // $post = [
+        //     'user_id' => 1,
+        //     'egift' => [
+        //         [
+        //             'egift_id' => 1,
+        //             'merchant_id' => 1,
+        //             'orig_price' => 100,
+        //             'sale_price' => 100,
+        //             'quantity' => 10,
+        //             'status' => 1,
+        //             'to' => ''
+        //         ],
+        //         [
+        //             'egift_id' => 2,
+        //             'merchant_id' => 2,
+        //             'orig_price' => 100,
+        //             'sale_price' => 100,
+        //             'quantity' => 20,
+        //             'status' => 2,
+        //             'to' => 2
+        //         ]
+        //     ]
+        // ];
+        // =================================
+
+        $post = Yii::$app->request->post();
+        $transaction_no = 'er'. time();
+
+        $transaction = new Transaction();
+        $transaction->transaction_no = $transaction_no;
+        $transaction->user_id = $post['user_id'];
+
+        if ($transaction->save()) {
+            
+            foreach ($post['egift'] as $egift) 
+            {
+                $this->saveEgiftTransaction($egift, $transaction->id);
+                $this->saveEgiftUser($egift, $post['user_id']);
+                $this->saveSales($egift, $transaction->id);
+            }
+
+             return true;
+        }
+        
+        return false;
+    }
+
+    public function saveSales($post, $transaction_id)
+    {
+        $sales = new Sales();
+        $sales->merchant_id = $post['merchant_id'];
+        $sales->transaction_id = $transaction_id;
+        $sales->amount = $post['orig_price'];
+        $sales->status = 1;
+
+        return $sales->save();
+    }
+
+
+    public function saveEgiftTransaction($post, $transaction_id)
+    {
+        $model = new EgiftTransaction();
+        $model->egift_id = $post['egift_id'];
+        $model->transaction_id = $transaction_id;
+        $model->orig_price = $post['orig_price'];
+        $model->sale_price = $post['sale_price'];
+        $model->quantity = $post['quantity'];
+        $model->status = $post['status'];
+
+        return $model->save();
+    }
+
+    public function saveEgiftUser($post, $user_id)
+    {
+        $egift = new EgiftUser();
+        $egift->egift_id = $post['egift_id'];
+        $egift->user_id = $user_id;
+        $egift->orig_price = $post['orig_price'];
+        $egift->sale_price = $post['sale_price'];
+        $egift->to = ($post['to']) ? (int)$post['to']: 0;
+        $egift->status = $post['status'];
+
+        return $egift->save();
+    }
 
 
 

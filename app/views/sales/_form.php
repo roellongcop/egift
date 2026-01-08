@@ -18,7 +18,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'updated_at')->textInput() ?>
 
-    <?= $form->field($model, 'egift_id')->textInput() ?>
+    <?= $form->field($model, 'merchant_id')->textInput() ?>
 
     <?= $form->field($model, 'transaction_id')->textInput(['maxlength' => true]) ?>
 

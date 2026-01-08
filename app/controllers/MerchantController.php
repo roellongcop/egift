@@ -65,6 +65,7 @@ class MerchantController extends Controller
     public function actionCreate()
     {
         $model = new Profile();
+        $model->scenario = 'create';
         $user = new User();
 
         $user->password = Yii::$app->security->generateRandomString(10);
@@ -73,37 +74,34 @@ class MerchantController extends Controller
         $user->role_id = RoleSearch::merchant();
         $user->user_type = 8;
 
-        if (
-            $model->load(Yii::$app->request->post()) && 
-            $user->load(Yii::$app->request->post()) && 
-            $user->validate() &&
-            $model->validate()
-        ) {
+        if ($model->load(Yii::$app->request->post()) && $user->load(Yii::$app->request->post())) {
 
-            $user->status = $model->authorized;
+            if ($user->validate() ) {
+                $user->status = $model->authorized;
 
-            $user->save();
+                $user->save();
+                
+                $mail = Yii::$app->mailer->compose('authorization', [
+                    'model' => $user 
+                ])
+                ->setFrom(['egiftrewards@egift2goapp.com' => 'Egift Rewards'])
+                ->setTo($user->email)
+                ->setSubject('Merchant | Registration') 
+                ->send(); 
+                
 
-            $uploadPath = Yii::$app->template->createFolder(['uploads', 'merchant']); 
+                $uploadPath = Yii::$app->template->createFolder(['uploads', 'merchant']);
+                $model->logo_input = UploadedFile::getInstance($model, 'logo_input');
+                $model->logo_banner_input = UploadedFile::getInstance($model, 'logo_banner_input');
+                $model->user_id = $user->id;
+                $model->upload($uploadPath); 
+            }
 
-            $model->logo_input = UploadedFile::getInstance($model, 'logo_input');
-            $model->user_id = $user->id;
-            $model->upload($uploadPath);
-
-
-            $model->save();
-
-
-            // $mail = Yii::$app->mailer->compose('authorization', [
-            //     'model' => $user 
-            // ])
-            // ->setFrom(['carmonahmo@gmail.com' => 'Egift Rewards'])
-            // ->setTo($user->email)
-            // ->setSubject('Merchant | Registration') 
-            // ->send();
-
-            return $this->redirect(['view', 'id' => $model->id]);
-        }
+            if ($model->save()) {
+                
+                return $this->redirect(['view', 'id' => $model->id]);
+            }
+        } 
 
         return $this->render('create', [
             'model' => $model,
@@ -141,14 +139,15 @@ class MerchantController extends Controller
 
             $uploadPath = Yii::$app->template->createFolder(['uploads', 'merchant']); 
             $model->logo_input = UploadedFile::getInstance($model, 'logo_input');
+            $model->logo_banner_input = UploadedFile::getInstance($model, 'logo_banner_input');
             $model->upload($uploadPath);
-            $model->save();
 
-            $user = User::findOne($model->user_id);
-            $user->save();
-
-
-            return $this->redirect(['view', 'id' => $model->id]);
+            if ($model->save()) {
+                $user = User::findOne($model->user_id);
+                if ($user->save()) {
+                    return $this->redirect(['view', 'id' => $model->id]);
+                }
+            }
         }
 
 

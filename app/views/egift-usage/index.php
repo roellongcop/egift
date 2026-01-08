@@ -24,7 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'id',
             'egift_id',
-            'date_used',
+            'created_at',
             'status',
 
             Yii::$app->template->actionButtons('id'),   

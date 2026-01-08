@@ -42,13 +42,20 @@
 
     </p>
 
-    <div class="row">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">
-                    Egift Information
-                </div>
-                <div class="card-body">
+
+    <nav>
+        <div class="nav nav-tabs" role="tablist">
+            <a class="nav-item nav-link active"  data-toggle="tab" href="#nav-details" role="tab">Details</a>
+            <a class="nav-item nav-link" data-toggle="tab" href="#nav-prices" role="tab">Price Variety</a>
+            <a class="nav-item nav-link" data-toggle="tab" href="#nav-freebies" role="tab">Freebies</a>
+            <a class="nav-item nav-link" data-toggle="tab" href="#nav-branches" role="tab" >Branches</a>
+            <a class="nav-item nav-link" data-toggle="tab" href="#nav-images" role="tab">Images</a>
+        </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-details" role="tabpanel" >
+            <div class="row">
+                <div class="col-md-12">
                     <?= DetailView::widget([
                         'model' => $model,
                         'attributes' => [
@@ -62,54 +69,14 @@
                         ],
                     ]) ?>
                 </div>
+
             </div>
-
-
         </div>
 
-        <div class="col-md-4">
-            <img src="<?= Yii::$app->template->_image($model->image) ?>"class="img-thumbnail" >
-        </div>
-
-    </div>
-
-
-    <br><br>
-
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <?= ($model->branchesList == null) ? 'No ': '' ?> Available Branches
-                </div>
-                <div class="card-body">
-                     <table class="table table-bordered">
-                        <tbody>
-                            <?php foreach ($model->branchesList as $branch) : ?>
-                                <tr>
-                                    <td>
-                                        <?= ucwords($branch->name) ?>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
-        </div>
-    </div>
-    <br><br>
-
-
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <?= ($model->priceVariety == null) ? 'No ': '' ?>Price Variety
-                </div>
-                <div class="card-body">
-                     <table class="table table-bordered">
+        <div class="tab-pane fade" id="nav-prices" role="tabpanel">
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-bordered table-striped">
                         <thead>
                             <th>Original Price</th>
                             <th>Sale Price</th>
@@ -125,32 +92,80 @@
                     </table>
                 </div>
             </div>
-
-           
         </div>
-    </div>
-    <br><br>
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <?= ($model->egiftFreebies == null) ? 'No ': '' ?>Freebies
+        <div class="tab-pane fade" id="nav-freebies" role="tabpanel">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <?= ($model->egiftFreebies == null) ? 'No ': '' ?>Freebies
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+
+                                <?php foreach ($model->egiftFreebies as $key => $freebies) : ?>
+                                    <?= $this->render('_freebies', [ 
+                                        'model' => $freebies
+                                    ]); ?>
+                                <?php endforeach; ?>
+
+                            </div>
+                        </div>
+                    </div>
+                    
                 </div>
-                <div class="card-body">
-                    <div class="row">
+            </div>
+        </div>
 
-                        <?php foreach ($model->egiftFreebies as $key => $freebies) : ?>
-                            <?= $this->render('_freebies', [ 
-                                'model' => $freebies
-                            ]); ?>
-                        <?php endforeach; ?>
 
+        
+        <div class="tab-pane fade" id="nav-branches" role="tabpanel">
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-bordered">
+                        <tbody>
+                            <?php foreach ($model->branchesList as $branch) : ?>
+                                <tr>
+                                    <td>
+                                        <?= Html::a(ucwords($branch->name), ['branches/view', 'id' => $branch->id]) ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane fade" id="nav-images" role="tabpanel">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            Egift Banner Image
+                        </div>
+                        <div class="card-body">
+                            <img src="<?= Yii::$app->template->_image($model->image_banner) ?>"class="img-thumbnail" >
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            Egift Image
+                        </div>
+                        <div class="card-body">
+                            <img src="<?= Yii::$app->template->_image($model->image) ?>"class="img-thumbnail" >
+                        </div>
                     </div>
                 </div>
             </div>
-            
         </div>
     </div>
+
+
+ 
 
 </div>
