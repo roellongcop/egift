@@ -32,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
             'status',
             'created_at',
             'updated_at',
-            'egift_id',
+            'merchant_id',
             'transaction_id',
             'amount',
         ],

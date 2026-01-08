@@ -111,4 +111,37 @@ class EgiftSearch extends Egift
 
         return $model;
     }
+
+    public static function creation($year='')
+    {
+        $records = Egift::find()
+            ->andFilterWhere(['YEAR(created_at)' => $year])
+            ->asArray()
+            ->all();
+
+        return $records;
+    }
+
+    public static function approved()
+    {
+        $records = Egift::find()
+            ->where(['status' => 1])
+            ->asArray()
+            ->all();
+
+        return $records;
+    }
+
+    public static function for_approval()
+    {
+        $records = Egift::find()
+            ->where(['status' => 0])
+            ->asArray()
+            ->all();
+
+        return $records;
+    }
+
+    
+
 }

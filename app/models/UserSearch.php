@@ -109,11 +109,30 @@ class UserSearch extends User
         return $records;
     }
 
-    public static function getMerchants()
+    public static function merchants($year="")
     {
         $records = User::find()
-            ->where(['user_type' => 1, 'status' => 1])
-            ->limit(6)
+            ->where(['user_type' => 8, 'status' => 1])
+            ->andFilterWhere(['YEAR(created_at)' => $year])
+            ->all();
+
+        return $records;
+    }
+
+    public static function authorizedMerchants()
+    {
+        $records = User::find()
+            ->where(['user_type' => 8, 'status' => 1])
+            ->all();
+
+        return $records;
+    }
+
+
+    public static function unAuthorizedMerchants()
+    {
+        $records = User::find()
+            ->where(['user_type' => 8, 'status' => 0])
             ->all();
 
         return $records;

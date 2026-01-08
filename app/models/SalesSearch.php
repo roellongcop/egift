@@ -18,8 +18,8 @@ class SalesSearch extends Sales
     public function rules()
     {
         return [
-            [['id', 'egift_id'], 'integer'],
-            [['status', 'created_at', 'updated_at', 'transaction_id'], 'safe'],
+            [['id', 'merchant_id', 'transaction_id'], 'integer'],
+            [['status', 'created_at', 'updated_at'], 'safe'],
             [['amount'], 'number'],
         ];
     }
@@ -63,7 +63,7 @@ class SalesSearch extends Sales
             'id' => $this->id,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'egift_id' => $this->egift_id,
+            'merchant_id' => $this->merchant_id,
             'amount' => $this->amount,
         ]);
 
@@ -71,5 +71,18 @@ class SalesSearch extends Sales
             ->andFilterWhere(['like', 'transaction_id', $this->transaction_id]);
 
         return $dataProvider;
+    }
+
+
+    public static function saleTransaction($year="")
+    {
+        $records = Sales::find()
+            ->select(['SUM(amount) as total'])
+            ->where(['status' => 1])
+            ->andFilterWhere(['YEAR(created_at)' => $year])
+            ->asArray()
+            ->one()['total'];
+
+        return $records;
     }
 }

@@ -12,22 +12,22 @@ $this->params['breadcrumbs'][] = '';
 
 ?>
 
-<div class="row">
+<div class="row" id="super-admin-dashboard">
     <div class="col-sm-6 col-lg-3">
         <div class="card text-white bg-primary">
             <div class="card-body pb-0">
                 <div class="btn-group float-right">
                     <button class="btn btn-transparent dropdown-toggle p-0" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="icon-settings"></i>
+                        <i class="fa fa-navicon"></i>
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <a class="dropdown-item" href="#">Something else here</a>
+                        <a class="dropdown-item" href="#"> (<?= $overall_merchants ?>) All</a>
+                        <a class="dropdown-item" href="#"> (<?= $authorized_merchants ?>) Authorized</a>
+                        <a class="dropdown-item" href="#"> (<?= $unauthorized_merchants ?>) Un authorized</a>
                     </div>
                 </div>
                 <div class="text-value"><?= $total_merchants ?></div>
-                <div>Registered Merchants</div>
+                <div><b>( <?= $total_merchants_year ?> )</b> Registered Merchants this year</div>
             </div>
             <div class="chart-wrapper mt-3 mx-3" style="height:70px;">
                 <canvas class="chart" id="card-chart1" height="70"></canvas>
@@ -40,7 +40,7 @@ $this->params['breadcrumbs'][] = '';
             <div class="card-body pb-0">
                 <div class="btn-group float-right">
                     <button class="btn btn-transparent dropdown-toggle p-0" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="icon-settings"></i>
+                        <i class="fa fa-navicon"></i>
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
                         <a class="dropdown-item" href="#">Action</a>
@@ -48,8 +48,8 @@ $this->params['breadcrumbs'][] = '';
                         <a class="dropdown-item" href="#">Something else here</a>
                     </div>
                 </div>
-                <div class="text-value">9999</div>
-                <div>Sales</div>
+                <div class="text-value"><?= $sales ?></div>
+                <div><b>( <?= $sales_year ?> )</b> Sales this year</div>
             </div>
             <div class="chart-wrapper mt-3 mx-3" style="height:70px;">
                 <canvas class="chart" id="card-chart3" height="70"></canvas>
@@ -62,16 +62,16 @@ $this->params['breadcrumbs'][] = '';
             <div class="card-body pb-0">
                 <div class="btn-group float-right">
                     <button class="btn btn-transparent dropdown-toggle p-0" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="icon-settings"></i>
+                        <i class="fa fa-navicon"></i>
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <a class="dropdown-item" href="#">Something else here</a>
+                        <a class="dropdown-item" href="#"> (<?= $overall_egift_creation ?>) All</a>
+                        <a class="dropdown-item" href="#">(<?= $approved_egift ?>) Approved</a>
+                        <a class="dropdown-item" href="#">(<?= $for_approval_egift ?>) For Approval</a>
                     </div>
                 </div>
-                <div class="text-value">9.823</div>
-                <div>Egifts Creation</div>
+                <div class="text-value"><?= $egift_creation ?></div>
+                <div> <b>( <?= $egift_creation_year ?> )</b> Egifts Creation this year</div>
             </div>
             <div class="chart-wrapper mt-3 mx-3" style="height:70px;">
                 <canvas class="chart" id="card-chart2" height="70"></canvas>
@@ -80,12 +80,14 @@ $this->params['breadcrumbs'][] = '';
     </div>
 
 
+
+
     <div class="col-sm-6 col-lg-3">
         <div class="card text-white bg-danger">
             <div class="card-body pb-0">
                 <div class="btn-group float-right">
                     <button class="btn btn-transparent dropdown-toggle p-0" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <i class="icon-settings"></i>
+                        <i class="fa fa-navicon"></i>
                     </button>
                     <div class="dropdown-menu dropdown-menu-right">
                         <a class="dropdown-item" href="#">Action</a>
@@ -93,8 +95,8 @@ $this->params['breadcrumbs'][] = '';
                         <a class="dropdown-item" href="#">Something else here</a>
                     </div>
                 </div>
-                <div class="text-value">9.823</div>
-                <div>Egifts Usage</div>
+                <div class="text-value"><?= $egift_usage ?></div>
+                <div> <b>( <?= $egift_usage_year ?> )</b> Egifts Usage this year</div>
             </div>
             <div class="chart-wrapper mt-3 mx-3" style="height:70px;">
                 <canvas class="chart" id="card-chart4" height="70"></canvas>

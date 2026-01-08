@@ -30,7 +30,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => [
             'id',
             'egift_id',
-            'date_used',
+            'created_at',
             'status',
         ],
     ]) ?>

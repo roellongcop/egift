@@ -23,7 +23,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'updated_at') ?>
 
-    <?= $form->field($model, 'egift_id') ?>
+    <?= $form->field($model, 'merchant_id') ?>
 
     <?php // echo $form->field($model, 'transaction_id') ?>
 

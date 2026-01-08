@@ -33,14 +33,13 @@ $config = [
         ],
         'mailer' => [
             'class' => 'yii\swiftmailer\Mailer',
-            'useFileTransport' => false,
             'transport' => [
                 'class' => 'Swift_SmtpTransport',
-                'host' => 'smtp.gmail.com',  
-                'username' => 'carmonahmo@gmail.com',
-                'password' => 'carmonahmo123456',
-                'port' => '587', 
-                'encryption' => 'tls', 
+                'host' => 'egift2goapp.com',  // e.g. smtp.mandrillapp.com or smtp.gmail.com
+                'username' => 'egiftrewards@egift2goapp.com',
+                'password' => 'egiftrewards',
+                'port' => '587', // Port 25 is a very common port too
+                'encryption' => 'tls', // It is often used, check your provider or mail server specs
             ],
         ],
 
@@ -73,6 +72,10 @@ $config = [
                 // for testing only in email
                 'send-email/<auth_key>' => 'site/send-email',
 
+                '<controller>/update-stock/<egift_id:\d+>/<quantity:\d+>' => '<controller>/update-stock',
+
+                '<controller>/egift-user/<from:\d+>' => '<controller>/egift-user',
+                '<controller>/egift-user/<from:\d+>/<to:\d+>' => '<controller>/egift-user',
                 '<controller>/add-to-blocklist/<user_id:\d+>' => '<controller>/add-to-blocklist',
                 '<controller>/set-to-authorized/<user_id:\d+>' => '<controller>/set-to-authorized',
                 '<controller>/set-to-unauthorized/<user_id:\d+>' => '<controller>/set-to-unauthorized',

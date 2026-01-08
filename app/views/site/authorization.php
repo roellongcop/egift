@@ -55,6 +55,24 @@ $this->params['breadcrumbs'][] = $this->title;
                         </div>
 
                         <br>
+
+                        <hr>
+
+                        <?= $form->field($model, 'logo_banner_input')->fileInput(['class' => 'image-input']) ?>
+                        <h1><i class="fa fa-spinner"></i></h1>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <img 
+                                    id="image-preview-banner" 
+                                    src="<?= Yii::$app->template->_image($model->logo_banner) ?>" 
+                                    alt="" 
+                                    class="img-thumbnail" 
+                                    width="200"
+                                    height="200">
+                            </div>
+                        </div>
+
+                        <br>
                         <hr>
 
                         <h2>Account Information</h2>

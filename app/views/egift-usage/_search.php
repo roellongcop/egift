@@ -19,7 +19,7 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'egift_id') ?>
 
-    <?= $form->field($model, 'date_used') ?>
+    <?= $form->field($model, 'created_at') ?>
 
     <?= $form->field($model, 'status') ?>
 

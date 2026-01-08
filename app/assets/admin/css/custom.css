@@ -369,3 +369,7 @@ ul.pagination > li.active > a {
 ul.pagination > li.active > a {
   color: #000;
 }
+
+.table th, .card-header {
+  text-transform: uppercase !important;
+}
